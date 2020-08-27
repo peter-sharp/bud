@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bugeting App</title>
+    <script type="module" src="/app.js"></script>
+    <link rel="stylesheet" href="/style.css"></link>
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+    <script>
+        navigator.serviceWorker.register('service-worker.js', {
+                scope: '/'
+        });
+    </script>
+</head>
+<body class="wrapper">
+    <div budgeting-app class="wrapper__inside">
+        <form budgeting-app_new-budget>
+            <fieldset class="hidden" budgeting-app_new-budget-fields>
+                <legend>New Budget</legend>
+                <label>Name <input name="name" type="text"></label>
+                <label>Amount $<input class="number" name="amount" type="number" step="0.01"></label>
+            </fieldset>
+            <button type="submit" budgeting-app_new-budget-button>New Budget</button>
+        </form>
+        <ul  budgeting-app_budgets class="stack list list--no-style">
+        </ul>
+    </div>
+    <template id="budgeting_app_budget_item">
+        <li budgeting-app_budget-item>
+            <span budget-name></span> $<span budget-remaining></span>/<span budget-amount></span>
+            <details class="stack stack--gap-1">
+                <summary>items</summary>
+                <form class="stack stack--gap-1" budget-items-form>
+                    <input type="hidden" name="budgetId" value="">
+                    <ul class="stack stack--gap-1 list list--no-style">
+                        <li>
+                            <label>Name <input name="name" type="text"></label>
+                            <label>Amount $<input class="number" name="amount" type="text"></label>
+                        </li>
+                    </ul>
+                    <button>Save</button>
+                </form>
+            </details>
+        </li>
+    </template>
+</body>
+</html>
