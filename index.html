@@ -32,7 +32,9 @@
     </div>
     <template id="budgeting_app_budget_item">
         <li budgeting-app_budget-item>
-            <span budget-name></span> $<span budget-remaining></span>/<span budget-amount></span>
+            <span budget-name></span>
+            <span>$<span budget-remaining></span>/<span budget-amount></span></span>
+            <button budget-item_edit-button>Edit</button>
             <details class="stack stack--gap-1">
                 <summary>items</summary>
                 <form class="stack stack--gap-1" budget-items-form>
@@ -47,6 +49,13 @@
                 </form>
             </details>
         </li>
+    </template>
+    <template id="budgeting_app_edit_budget_form">
+        <form budgeting-app_edit-budget>
+            <label>Name <input name="name" type="text"></label>
+            <label>Amount $<input class="number" name="amount" type="number" step="0.01"></label>
+            <button type="submit" budgeting-app_edit-budget-button>Save</button>
+        </form>
     </template>
 </body>
 </html>
