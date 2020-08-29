@@ -31,6 +31,13 @@ body {
     margin-top: var(--gap, 2rem);
 }
 
-.stack--gap-1 {
+.stack--gap-1 > * {
     --gap: 1rem;
+}
+.stack--gap-0-5 > * {
+    --gap: 0.5rem;
+}
+
+.cluster > * {
+    display: inline-block;
 }
