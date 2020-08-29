@@ -77,6 +77,7 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
             db.collection('budgets').save(state);
             // render
             budgetItem.append(budgetDisplay);
+            budgetItem.querySelector('[budget-name]').innerText = budget.name;
             budgetItem.querySelector('[budget-remaining]').innerText = round2dp(budget.remaining);
             budgetItem.querySelector('[budget-amount]').innerText = round2dp(budget.amount);
         });
