@@ -39,7 +39,48 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
         render();
     })
 
-    
+    importForm.addEventListener('submit', function handleImport(ev) {
+        ev.preventDefault();
+        let rawData;
+        try {
+            rawData = JSON.parse(this.elements['importData'].value);
+        } finally {
+            rawData = rawData || [];
+        }
+        for(let budget of rawData) {
+            let existingBudget = false;
+            state.budgets.forEach((localBudget, i) => {
+                if (budget.name == localBudget.name) {
+                    existingBudget = i;
+                } 
+            });
+
+            if(existingBudget !== false) {
+                budget.items.forEach((item, i) => {
+                    let existingItem = false;
+                    state.budgets[existingBudget].items.forEach((localItem, v) => {
+                        if (i === v && localItem.name == item.name) {
+                            existingItem = i;
+                        }
+                    });
+
+                    if(existingItem !== false) {
+                        state.budgets[existingBudget].items[existingItem].amount = item.modified > budget.items[existingItem].modified ?
+                            item.amount :
+                            budget.items[existingItem].amount;
+                    } else {
+                        state.budgets[existingBudget].items.push(item);
+                    }
+                });
+            } else {
+                state.budgets.push(budget);
+            }
+        }
+        state.budgetIndex = getBudgetIndex(state.budgets);
+        renderExport(state);
+        db.collection('budgets').save(state);
+        render();
+    });
 
     function getBudgetIndex(budgets) {
         const budgetIndex = {};
@@ -100,8 +141,14 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
             const name = input.value;
             const amount = amountInputs[i].value;
             if(name) {
+                const lastName = budget.items[i].name;
+                const lastAmount = budget.items[i].amount;
+                const modified = (lastName != name || lastAmount != amount) ?
+                                    Date.now() :
+                                    budget.items[i].modified;
+                
                 total += parseFloat(amount);
-                items.push({name, amount});
+                items.push({ name, amount, modified});
             }
         });
         let budget = state.budgetIndex[budgetId];
@@ -152,14 +199,7 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
     }
     
     function renderExport(state) {
-        let csv = 'budgetId,budgetName,budgetAmount,itemName,itemPrice\n';
-        for (let budget of state.budgets) {
-            csv += `${budget.id},${budget.name},${budget.amount},,\n`;
-            for (let item of budget.items) {
-                csv += `,,,${item.name},${item.amount}\n`;
-            }
-        }
-        exportEl.value = csv;
+        exportEl.value = JSON.stringify(state.budgets, null, ' ');
     }
 })
 

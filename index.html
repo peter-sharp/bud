@@ -29,6 +29,17 @@
         </form>
         <ul  budgeting-app_budgets class="stack list list--no-style">
         </ul>
+        <details>
+            <summary>export</summary>
+            <textarea name="exportData"></textarea>
+        </details>
+        <details>
+            <summary>import</summary>
+            <form budgeting-app_import-form>
+                <textarea name="importData"></textarea>
+                <button type="submit">import</button>
+            </form>
+        </details>
     </div>
     <template id="budgeting_app_budget_item">
         <li budgeting-app_budget-item>
@@ -57,5 +68,6 @@
             <button type="submit" budgeting-app_edit-budget-button>Save</button>
         </form>
     </template>
+
 </body>
 </html>
