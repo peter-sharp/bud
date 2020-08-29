@@ -4,7 +4,9 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
     const newBudgetForm = el.querySelector('[budgeting-app_new-budget]');
     const newBudgetFields = el.querySelector('[budgeting-app_new-budget-fields]');
     const newBudgetButton = el.querySelector('[budgeting-app_new-budget-button]');
+    const importForm = el.querySelector('[budgeting-app_import-form]');
     const budgetList = el.querySelector('[budgeting-app_budgets]');
+    const exportEl = el.querySelector('[name="exportData"]');
     const budgetItemTemplate = document.getElementById('budgeting_app_budget_item');
     const budgetEditFormTemplate = document.getElementById('budgeting_app_edit_budget_form');
     const state = await db.collection('budgets', {
@@ -13,7 +15,7 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
         budgetIndex: {}
     }).fetchAll();
     state.budgetIndex = getBudgetIndex(state.budgets);
-
+    renderExport(state);
     render();
 
     newBudgetForm.addEventListener('submit', function handleNewBudget(ev) {
@@ -32,9 +34,12 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
                 break;
         }
         state.budgetIndex = getBudgetIndex(state.budgets);
+        renderExport(state);
         db.collection('budgets').save(state);
         render();
     })
+
+    
 
     function getBudgetIndex(budgets) {
         const budgetIndex = {};
@@ -80,6 +85,7 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
             budgetItem.querySelector('[budget-name]').innerText = budget.name;
             budgetItem.querySelector('[budget-remaining]').innerText = round2dp(budget.remaining);
             budgetItem.querySelector('[budget-amount]').innerText = round2dp(budget.amount);
+            renderExport(state);
         });
     }
 
@@ -103,6 +109,7 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
         budget.remaining = budget.amount - total;
        
         db.collection('budgets').save(state);
+        renderExport(state);
         const budgetItem = this.closest('[budgeting-app_budget-item]');
         renderBudget(budgetItem, budget);
     })
@@ -125,6 +132,7 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
             renderBudget(budgetItem, budget);
             budgetList.appendChild(budgetItem);
         })
+
     }
 
     function renderBudget(budgetItem, budget) {
@@ -143,6 +151,16 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
         budgetItem.querySelector('[budget-remaining]').innerText = round2dp(budget.remaining);
     }
     
+    function renderExport(state) {
+        let csv = 'budgetId,budgetName,budgetAmount,itemName,itemPrice\n';
+        for (let budget of state.budgets) {
+            csv += `${budget.id},${budget.name},${budget.amount},,\n`;
+            for (let item of budget.items) {
+                csv += `,,,${item.name},${item.amount}\n`;
+            }
+        }
+        exportEl.value = csv;
+    }
 })
 
 function getId() {
