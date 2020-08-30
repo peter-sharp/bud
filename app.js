@@ -14,7 +14,7 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
         state: null,
         budgets: [],
         budgetIndex: {},
-        version: 1
+        version: 2
     }).fetchAll();
 
     state.budgetIndex = getBudgetIndex(state.budgets);
@@ -23,6 +23,12 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
     if (!state.version || 1 > state.version) {
         state.budgets = state.budgets.map(x => ({ ...x , id: nanoid()}));
         state.version = 1;
+        db.collection('budgets').save(state);
+    }
+    if (!state.version || 2 > state.version) {
+        const colors = ['#ff0022', '#00ff22', '#2200ff', '#ff00ff', '#ffff22'];
+        state.budgets = state.budgets.map((x, i) => ({ ...x, color: colors[i % colors.length] }));
+        state.version = 2;
         db.collection('budgets').save(state);
     }
     
@@ -40,8 +46,9 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
                 const id = getId();
                 const name = this.elements['name'].value;
                 const amount = this.elements['amount'].value;
+                const color = this.elements['color'].value;
                 const remaining = amount;
-                state.budgets.push({ id, name, amount, remaining, items: [] })
+                state.budgets.push({ id, name, color, amount, remaining, items: [] })
                 break;
         }
         state.budgetIndex = getBudgetIndex(state.budgets);
@@ -117,6 +124,7 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
         // render
         budgetForm.elements['name'].value = budget.name;
         budgetForm.elements['amount'].value = budget.amount;
+        budgetForm.elements['color'].value = budget.color;
 
         let budgetDisplay = document.createDocumentFragment();
         budgetDisplay.append(...budgetItem.cloneNode(true).childNodes);
@@ -130,6 +138,7 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
             budget.name = this.elements['name'].value;
             const spent = budget.amount - budget.remaining;
             budget.amount = this.elements['amount'].value;
+            budget.color = this.elements['color'].value;
             budget.remaining = budget.amount - spent;
             db.collection('budgets').save(state);
             // render
@@ -137,6 +146,7 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
             budgetItem.querySelector('[budget-name]').innerText = budget.name;
             budgetItem.querySelector('[budget-remaining]').innerText = round2dp(budget.remaining);
             budgetItem.querySelector('[budget-amount]').innerText = round2dp(budget.amount);
+            budgetItem.querySelector('[budget-header]').style.setProperty("--color-bg", budget.color);
             renderExport(state);
         });
     }
@@ -188,6 +198,7 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
             budgetItem.querySelector('[budget-name]').innerText = budget.name;
             budgetItem.querySelector('[budget-amount]').innerText = budget.amount;
             budgetItem.querySelector('[budget-remaining]').innerText = round2dp(budget.remaining);
+            budgetItem.querySelector('[budget-header]').style.setProperty("--color-bg", budget.color);
             budgetItem.querySelector('[name="budgetId"]').value = budget.id;
             renderBudget(budgetItem, budget);
             budgetList.appendChild(budgetItem);

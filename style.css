@@ -41,3 +41,18 @@ body {
 .cluster > * {
     display: inline-block;
 }
+
+.budget-item__header {
+    background-color: var(--color-bg, #333);
+    color: var(--color-fg, white);
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5em;
+}
+
+.budget-item__price {
+	flex: auto 2;
+	text-align: right;
+	padding-right: 1em;
+
+}
