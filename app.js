@@ -1,3 +1,4 @@
+import {nanoid} from 'https://unpkg.com/nanoid@3.1.12/nanoid.js';
 import db from '/db.js';
 
 Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function budgetingApp(el) {
@@ -12,9 +13,19 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
     const state = await db.collection('budgets', {
         state: null,
         budgets: [],
-        budgetIndex: {}
+        budgetIndex: {},
+        version: 1
     }).fetchAll();
+
     state.budgetIndex = getBudgetIndex(state.budgets);
+
+    // migrations
+    if (!state.version || 1 > state.version) {
+        state.budgets = state.budgets.map(x => ({ ...x , id: nanoid()}));
+        state.version = 1;
+        db.collection('budgets').save(state);
+    }
+    
     renderExport(state);
     render();
 
@@ -204,11 +215,8 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
 })
 
 function getId() {
-    getId.last += 1;
-    localStorage.getItem('lastId', getId.last);
-    return getId.last;
+    return nanoid();
 }
-getId.last = parseFloat(localStorage.getItem('lastId')) || 0;
 
 function delegate(el, selector, evName, cb) {
     el.addEventListener(evName, function onDelegated(ev) {

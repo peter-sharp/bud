@@ -1,4 +1,4 @@
-const CACHE = 'cache-and-update';
+const CACHE = 'budd-v1';
 
 self.addEventListener('install', function (evt) {
     console.info('The service worker is being installed.');
@@ -17,6 +17,7 @@ self.addEventListener('fetch', function (evt) {
 function precache() {
     return caches.open(CACHE).then(function (cache) {
         return cache.addAll([
+            'https://unpkg.com/nanoid@3.1.12/nanoid.js',
             './index.html',
             './style.css',
             './app.js',
