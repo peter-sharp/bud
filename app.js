@@ -147,13 +147,15 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
         const items = [];
         const nameInputs = this.elements['name'].length !== undefined ? Array.from(this.elements['name']) : [this.elements['name']];
         const amountInputs = this.elements['amount'].length !== undefined ? Array.from(this.elements['amount']) : [this.elements['amount']];
+        const budget = state.budgetIndex[budgetId];
         let total = 0;
         nameInputs.forEach(function makeItem(input, i) {
             const name = input.value;
             const amount = amountInputs[i].value;
             if(name) {
-                const lastName = budget.items[i].name;
-                const lastAmount = budget.items[i].amount;
+                // FIXME all modified updated when item added
+                const lastName = budget.items[i] && budget.items[i].name;
+                const lastAmount = budget.items[i] && budget.items[i].amount;
                 const modified = (lastName != name || lastAmount != amount) ?
                                     Date.now() :
                                     budget.items[i].modified;
@@ -162,7 +164,7 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
                 items.push({ name, amount, modified});
             }
         });
-        let budget = state.budgetIndex[budgetId];
+        
         budget.items = items;
         budget.remaining = budget.amount - total;
        
