@@ -77,7 +77,7 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
                 state.newBudgetFormState = null;
                 const id = getId();
                 const name = this.elements['name'].value;
-                const openingAmount = this.elements['amount'].value;
+                const openingAmount = parseFloat(his.elements['amount'].value);
                 const color = this.elements['color'].value;
                 const modified = Date.now();
                 const openingLineItem = {
