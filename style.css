@@ -54,5 +54,23 @@ body {
 	flex: auto 2;
 	text-align: right;
 	padding-right: 1em;
+}
 
+.line-item--deposit {
+  color: #02621c;
+}
+
+.budget-item .budget-item__focus-reveal,
+.line-item .line-item__focus-reveal {
+  transition: opacity 300ms ease-in-out;
+  opacity: 0;
+}
+
+.budget-item:hover .budget-item__focus-reveal,
+.budget-item:focus .budget-item__focus-reveal,
+.budget-item:focus-within .budget-item__focus-reveal,
+.line-item:hover .line-item__focus-reveal,
+.line-item:focus .line-item__focus-reveal,
+.line-item:focus-within .line-item__focus-reveal {
+  opacity: 1;
 }

@@ -23,7 +23,7 @@
             <fieldset class="hidden" budgeting-app_new-budget-fields>
                 <legend>New Budget</legend>
                 <label>Name <input name="name" type="text"></label>
-                <label>Amount $<input class="number" name="amount" type="number" step="0.01"></label>
+                <label>Opening balance $<input class="number" name="amount" type="number" step="0.01"></label>
                 <label>Color <input name="color" type="color"></label>
             </fieldset>
             <button type="submit" budgeting-app_new-budget-button>New Budget</button>
@@ -43,35 +43,59 @@
         </details>
     </div>
     <template id="budgeting_app_budget_item">
-        <li budgeting-app_budget-item>
+        <li tabindex="0" budgeting-app_budget-item class="budget-item" data-id="">
             <header class="budget-item__header" budget-header>
                 <span class="budget-item__name" budget-name></span>
-                <span class="budget-item__price">$<span budget-remaining></span>/<span budget-amount></span></span>
-                <button budget-item_edit-button>Edit</button>
+                <span class="budget-item__price">$<span budget-remaining></span></span>
+                <button class="budget-item__focus-reveal" budget-item_edit-button>Edit</button>
             </header>
             <details class="stack stack--gap-1">
                 <summary>items</summary>
-                <form class="stack stack--gap-1" budget-items-form>
+                <form class="stack stack--gap-1" budgeting-app_new-budget-item-form>
                     <input type="hidden" name="budgetId" value="">
-                    <ul class="stack stack--gap-1 list list--no-style">
-                        <li class="cluster stack stack--gap-0-5">
+                    <div budgeting-app_new-line-item-fields class="hidden">
                             <label>Name <input name="name" type="text"></label>
                             <label>Amount $<input class="number" name="amount" type="text"></label>
-                        </li>
-                    </ul>
-                    <button>Save</button>
+                        <fieldset>
+                            <legend>action</legend>
+                            <label>Deposit <input type="radio" name="action" value="deposit"></label>
+                            <label>Withdraw <input checked type="radio" name="action" value="withdraw"></label>
+                        </fieldset>
+                    </div>
+                    <button budgeting-app_new-item-button>New Item</button>
                 </form>
+                 <ul budget-app_line-item-list class="stack stack--gap-0-5 list list--no-style">
+                </ul>
             </details>
         </li>
     </template>
     <template id="budgeting_app_edit_budget_form">
         <form budgeting-app_edit-budget>
             <label>Name <input name="name" type="text"></label>
-            <label>Amount $<input class="number" name="amount" type="number" step="0.01"></label>
             <label>Color <input  name="color" type="color"></label>
             <button type="submit" budgeting-app_edit-budget-button>Save</button>
         </form>
     </template>
-
+    <template id="budgeting_app_line_item">
+      <li tabindex="0" class="cluster line-item" budgeting-app_line-item data-id="">
+          <data name="action"></data>
+          <data name="name"></data>
+          <span class="number">$<data name="amount"></data></span>
+          <button class="line-item__focus-reveal" line-item_edit-button>Edit</button>
+          <button class="line-item__focus-reveal" line-item_delete-button>Delete</button>
+      </li>
+    </template>
+    <template id="budgeting_app_edit_line_item_form">
+      <form class="stack stack--gap-1" budgeting-app_budget-item-form>
+            <label>Name <input name="name" type="text"></label>
+            <label>Amount $<input class="number" name="amount" type="text"></label>
+            <fieldset>
+                <legend>action</legend>
+                <label>Deposit <input type="radio" name="action" value="deposit"></label>
+                <label>Withdraw <input checked type="radio" name="action" value="withdraw"></label>
+            </fieldset>
+          <button>save</button>
+      </form>
+    </template>
 </body>
 </html>
