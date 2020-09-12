@@ -37,7 +37,7 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
         state.version = 2;
         db.collection('budgets').save(state);
     }
-    
+
     if (!state.version || 3 > state.version) {
 
         state.budgets = state.budgets.map(function updateLineItems(budget) {
@@ -118,7 +118,7 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
                   const item = { id, name, action, amount, modified: Date.now() };
                   budget.items = [...budget.items, item];
                   budget.remaining = calculateBalanceFromItem(budget.remaining, item);
-            }
+                }
                 budget.addingItem = false;
                 break;
         }
@@ -187,7 +187,7 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
         const itemId = lineItemEl.dataset.id;
         const lineItem = budget.items.find(x => x.id == itemId);
         const lineItemForm = lineItemEditFormTemplate.content.cloneNode(true).firstElementChild;
-        
+
         // render
         lineItemForm.elements['name'].value = lineItem.name;
         lineItemForm.elements['amount'].value = lineItem.amount;
@@ -195,7 +195,7 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
         //TODO action
         emptyEl(lineItemEl)
         lineItemEl.append(lineItemForm);
-       
+
         lineItemForm.addEventListener('submit', function saveBudget(ev) {
             ev.preventDefault();
             lineItem.name = this.elements['name'].value;
@@ -203,9 +203,9 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
             lineItem.action = this.elements['action'].value;
             lineItem.modified = Date.now();
             budget.remaining = calculateBalanceFromItems(budget.items)
-        db.collection('budgets').save(state);
+            db.collection('budgets').save(state);
             // render
-        renderExport(state);
+            renderExport(state);
             renderBudget(budgetEl, budget);
         });
     })
@@ -310,7 +310,7 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
         });
         budgetItem.querySelector('[budget-remaining]').innerText = round2dp(budget.remaining);
     }
-    
+
     function renderExport(state) {
         exportEl.value = JSON.stringify(state.budgets, null, ' ');
     }
