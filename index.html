@@ -44,13 +44,12 @@
     </div>
     <template id="budgeting_app_budget_item">
         <li tabindex="0" budgeting-app_budget-item class="budget-item" data-id="">
-            <header class="budget-item__header" budget-header>
-                <span class="budget-item__name" budget-name></span>
-                <span class="budget-item__price">$<span budget-remaining></span></span>
-                <button class="budget-item__focus-reveal" budget-item_edit-button>Edit</button>
-            </header>
             <details class="stack stack--gap-1">
-                <summary>items</summary>
+                <summary  class="budget-item__header" budget-header>
+                    <span class="budget-item__name" budget-name></span>
+                    <span class="budget-item__price">$<span budget-remaining></span></span>
+                    <button class="budget-item__focus-reveal" budget-item_edit-button>Edit</button>
+              </summary>
                 <form class="stack stack--gap-1" budgeting-app_new-budget-item-form>
                     <input type="hidden" name="budgetId" value="">
                     <div budgeting-app_new-line-item-fields class="hidden">
@@ -78,7 +77,7 @@
     </template>
     <template id="budgeting_app_line_item">
       <li tabindex="0" class="cluster line-item" budgeting-app_line-item data-id="">
-          <data name="action"></data>
+          <data class="icon" name="action"></data>
           <data name="name"></data>
           <span class="number">$<data name="amount"></data></span>
           <button class="line-item__focus-reveal" line-item_edit-button>Edit</button>

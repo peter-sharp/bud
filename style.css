@@ -37,7 +37,10 @@ body {
 .stack--gap-0-5 > * {
     --gap: 0.5rem;
 }
-
+.icon {
+  width: 1em;
+  text-align: center;
+}
 .cluster > * {
     display: inline-block;
 }
@@ -48,6 +51,17 @@ body {
     display: flex;
     justify-content: space-between;
     padding: 0.5em;
+}
+
+.budget-item__header::before {
+  content: "+";
+  color: #fff;
+  width: 1em;
+  margin-right: 0.3em;
+  text-align: center;
+}
+details[open] > .budget-item__header::before {
+  content: "-";
 }
 
 .budget-item__price {
