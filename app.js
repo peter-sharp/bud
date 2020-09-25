@@ -70,24 +70,27 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
     newBudgetForm.addEventListener('submit', function handleNewBudget(ev) {
         ev.preventDefault();
         switch (state.newBudgetFormState) {
-            case null:
-                state.newBudgetFormState = 'creatingNewBudget';
-                break;
             case 'creatingNewBudget':
                 state.newBudgetFormState = null;
-                const id = getId();
-                const name = this.elements['name'].value;
-                const openingAmount = parseFloat(this.elements['amount'].value);
-                const color = this.elements['color'].value;
-                const modified = Date.now();
-                const openingLineItem = {
-                  id: getId(),
-                  name: 'Opening balance',
-                  amount: openingAmount,
-                  action: 'deposit',
-                  modified
+                const name = this.elements['name'].value.trim();
+                if(name) {
+                  const id = getId();
+                  const openingAmount = parseFloat(this.elements['amount'].value);
+                  const color = this.elements['color'].value;
+                  const modified = Date.now();
+                  const openingLineItem = {
+                    id: getId(),
+                    name: 'Opening balance',
+                    amount: openingAmount,
+                    action: 'deposit',
+                    modified
+                  }
+                  state.budgets = [...state.budgets, { id, name, color, modified, remaining: openingAmount, items: [openingLineItem] }];
                 }
-                state.budgets = [...state.budgets, { id, name, color, modified, remaining: openingAmount, items: [openingLineItem] }];
+                break;
+            case null:
+            default:
+                state.newBudgetFormState = 'creatingNewBudget';
                 break;
         }
 
