@@ -7,6 +7,7 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
     const newBudgetForm = el.querySelector('[budgeting-app_new-budget]');
     const newBudgetFields = el.querySelector('[budgeting-app_new-budget-fields]');
     const newBudgetButton = el.querySelector('[budgeting-app_new-budget-button]');
+    const recalculateButton = el.querySelector('[budgeting-app_recalculate]');
     const importForm = el.querySelector('[budgeting-app_import-form]');
     const budgetList = el.querySelector('[budgeting-app_budgets]');
     const exportEl = el.querySelector('[name="exportData"]');
@@ -277,6 +278,16 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
         db.collection('budgets').save(state);
         render(state);
     });
+
+    recalculateButton.addEventListener('click', function recalculateBudgets() {
+      state.budgets = state.budgets.map(function recalculateBudget(budget) {
+        budget.amount = calculateBalanceFromItems(budget.items);
+        return budget;
+      });
+      renderExport(state);
+      db.collection('budgets').save(state);
+      render(state);
+    })
 
     function render(state) {
         if ('creatingNewBudget' == state.newBudgetFormState) {
