@@ -1,4 +1,4 @@
-const CACHE = 'budd-v1';
+const CACHE = 'budd-v3';
 
 self.addEventListener('install', function (evt) {
     console.info('The service worker is being installed.');
