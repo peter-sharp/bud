@@ -64,7 +64,7 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
     }
 
     renderExport(state);
-    render();
+    render(state);
 
     // New Budget
     newBudgetForm.addEventListener('submit', function handleNewBudget(ev) {
@@ -94,7 +94,7 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
         state.budgetIndex = getBudgetIndex(state.budgets);
         renderExport(state);
         db.collection('budgets').save(state);
-        render();
+        render(state);
     })
 
     // New Budget item
@@ -176,6 +176,15 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
         });
     }
 
+    delegate(el, '[budget-item_delete-button]', 'click', function handleBudgetDelete(ev) {
+      const budgetEl = this.closest('[budgeting-app_budget-item]');
+      const budgetId = budgetEl.dataset.id;
+      const budget = state.budgetIndex[budgetId];
+      budget.deleted = true;
+      db.collection('budgets').save(state);
+      renderExport(state);
+      render(state);
+    });
 
     delegate(el, '[line-item_edit-button]', 'click', function handleItemsUpdate(ev) {
        // TODO get working with new layout
@@ -263,10 +272,10 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
         state.budgetIndex = getBudgetIndex(state.budgets);
         renderExport(state);
         db.collection('budgets').save(state);
-        render();
+        render(state);
     });
 
-    function render() {
+    function render(state) {
         if ('creatingNewBudget' == state.newBudgetFormState) {
             newBudgetFields.classList.toggle('hidden', false);
             newBudgetButton.innerText = 'Save Budget';
@@ -276,6 +285,7 @@ Array.from(document.querySelectorAll('[budgeting-app]')).forEach(async function 
         }
         emptyEl(budgetList)
         state.budgets.forEach(function addBudget(budget) {
+            if(budget.deleted) return;
             const budgetItem = budgetItemTemplate.content.cloneNode(true).firstElementChild;
 
             renderBudget(budgetItem, budget);
