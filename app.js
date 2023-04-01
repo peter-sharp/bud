@@ -1,5 +1,5 @@
 import {nanoid} from 'https://unpkg.com/nanoid@3.1.12/nanoid.js';
-import db from '/db.js';
+import db from './db.js';
 // -$2 2020-09-11 coke
 // -$2 2020-09-11 fuse tea
 // x +$21 to y
